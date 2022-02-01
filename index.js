@@ -1,6 +1,6 @@
 const fs = require('fs')
 const express = require('express');
-const persons = require('./persons.json')
+let persons = require('./persons.json')
 const cors = require('cors')
 const morgan = require('morgan')
 const app = express();
@@ -73,6 +73,13 @@ app.post('/api/persons', (req,res) => {
 app.delete('/api/persons/:id', (req,res) => {
     const id = Number(req.params.id);
     persons = persons.filter(p => p.id !== id)
+
+    fs.writeFileSync('./persons.json', JSON.stringify(persons), err => {
+        if(err)
+            console.log(err)
+        return
+    })
+
 
     res.status(204).end()
 })
